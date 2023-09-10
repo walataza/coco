@@ -1,0 +1,8 @@
+C:\Users\Apollo Twijukye\Desktop\IU\PROJECT AI USE CASE\CODES\FINAL\CoCo\CoCo\obj\Debug\net7.0\CoCo.csproj.AssemblyReference.cache
+C:\Users\Apollo Twijukye\Desktop\IU\PROJECT AI USE CASE\CODES\FINAL\CoCo\CoCo\obj\Debug\net7.0\CoCo.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Apollo Twijukye\Desktop\IU\PROJECT AI USE CASE\CODES\FINAL\CoCo\CoCo\obj\Debug\net7.0\CoCo.AssemblyInfoInputs.cache
+C:\Users\Apollo Twijukye\Desktop\IU\PROJECT AI USE CASE\CODES\FINAL\CoCo\CoCo\obj\Debug\net7.0\CoCo.AssemblyInfo.cs
+C:\Users\Apollo Twijukye\Desktop\IU\PROJECT AI USE CASE\CODES\FINAL\CoCo\CoCo\obj\Debug\net7.0\CoCo.csproj.CoreCompileInputs.cache
+C:\Users\Apollo Twijukye\Desktop\IU\PROJECT AI USE CASE\CODES\FINAL\CoCo\CoCo\obj\Debug\net7.0\CoCo.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Apollo Twijukye\Desktop\IU\PROJECT AI USE CASE\CODES\FINAL\CoCo\CoCo\obj\Debug\net7.0\CoCo.RazorAssemblyInfo.cache
+C:\Users\Apollo Twijukye\Desktop\IU\PROJECT AI USE CASE\CODES\FINAL\CoCo\CoCo\obj\Debug\net7.0\CoCo.RazorAssemblyInfo.cs
