@@ -1,77 +1,56 @@
-﻿using HotelBot.Models;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.FormFlow;
-using Microsoft.Bot.Builder.Luis;
-using Microsoft.Bot.Builder.Luis.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using CoCoChatbot.Models;
+using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.FormFlow;
+using Microsoft.Bot.Builder.Luis;
+using Microsoft.Bot.Builder.Luis.Models;
+using Microsoft.Azure.CognitiveServices.Language.LUIS.Runtime;
+using Microsoft.Azure.CognitiveServices.Language.LUIS.Runtime.Models;
 
-namespace HotelBot.Dialogues
+namespace CoCoChatbot
 {
-    [LuisModel("d8de17d9-f65c-40f5-8a3e-9009ea6910f1", "c2915c46947441088caec6277af3d6d8")]
-    [Serializable]
-
-    public class LUISDialog : LuisDialog<RoomReservation>
+    class Program
     {
-        private readonly BuildFormDelegate<RoomReservation> ReserveRoom;
-
-        public LUISDialog(BuildFormDelegate<RoomReservation> reserveRoom)
+        static async Task Main(string[] args)
         {
-            this.ReserveRoom = reserveRoom;
-        }
+            var luisAppId = "d8de17d9-f65c-40f5-8a3e-9009ea6910f1";
+            var predictionKey = "c2915c46947441088caec6277af3d6d8";
+            var endpoint = "https://terabhyte.com/clients/coco/api/v2.0";
+            var credentials = new ApiKeyServiceClientCredentials(predictionKey);
+            var client = new LUISRuntimeClient(credentials) { Endpoint = endpoint };
 
-        [LuisIntent("")]
-        public async Task None(IDialogContext context, LuisResult result)
-        {
-            await context.PostAsync("I'm sorry, I don't know what you mean.");
-            context.Wait(MessageReceived);
-        }
+            string userInput = "I want to book a suite for tomorrow.";
+            var predictionRequest = new PredictionRequest { Query = userInput };
 
-        [LuisIntent("Greeting")]
-        public async Task Greeting(IDialogContext context, LuisResult result)
-        {
-            context.Call(new GreetingDialog(), Callback);
-        }
-
-        private async Task Callback(IDialogContext context, IAwaitable<object> result)
-        {
-            context.Wait(MessageReceived);
-        }
-
-        [LuisIntent("ReserveRoom")]
-
-        public async Task RoomRervation(IDialogContext context, LuisResult result)
-        {
-            var enrollmentForm = new FormDialog<RoomReservation>(new RoomReservation(), this.ReserveRoom, FormOptions.PromptInStart);
-            context.Call<RoomReservation>(enrollmentForm, Callback);
-        }
-
-        [LuisIntent("QueryAmenities")]
-
-        public async Task QueryAmenities(IDialogContext context, LuisResult result)
-        {
-            foreach (var entity in result.Entities.Where(Entity => Entity.Type == "Amenity"))
+            try
             {
-                var value = entity.Entity.ToLower();
-                if (value == "pool" || value == "gym" || value == "wifi" || value == "towels")
+                var predictionResponse = await client.Prediction.GetSlotPredictionAsync(luisAppId, "production", predictionRequest);
+                var topIntent = predictionResponse.Prediction.TopIntent;
+                var entities = predictionResponse.Prediction.Entities;
+
+                if (topIntent == "BookRoom")
                 {
-                    await context.PostAsync("Yes we have it!");
-                    context.Wait(MessageReceived);
-                    return;
+                    string roomType = entities.ContainsKey("RoomType") ? entities["RoomType"][0] : "any room";
+                    Console.WriteLine($"You want to book a {roomType}.");
+                }
+                else if (topIntent == "CheckAvailability")
+                {
+                    string roomType = entities.ContainsKey("RoomType") ? entities["RoomType"][0] : "any room";
+                    Console.WriteLine($"You want to check availability for a {roomType}.");
                 }
                 else
                 {
-                    await context.PostAsync("I'm sorry, we don't have that");
-                    context.Wait(MessageReceived);
-                    return;
+                    Console.WriteLine("I'm sorry, I didn't understand your request.");
                 }
             }
-            await context.PostAsync("I'm sorry, we don't have that.");
-            context.Wait(MessageReceived);
-            return;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }
